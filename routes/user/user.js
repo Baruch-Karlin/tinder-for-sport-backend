@@ -22,7 +22,7 @@ const mockUser = {
 
 router.post('/user/chat',
     async (req, res, next) => {
-        //check 
+        
         
         const {body} = req.body;
         res.status(200)
