@@ -16,30 +16,8 @@ const User = require('./mongoose_modle/user');
 const router = express.Router();
 
 
-router.post('/',
-    async (req, res, next) => {
-        const user = new User({
-            _id: new mongoose.Types.ObjectId(),
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
-            email: req.body.email,
-            hash_password: req.body.hash_password,
-            telephone: req.body.telephone,
-            picture: req.body.picture,
-            sports: req.body.sports
-        });
-        user.save()
-            .then(result => {
-                console.log(result)
-                res.status(200).send(result)
-
-            })
-            .catch(err => console.log(err))
-    })
-    
-
-
-    router.get('/:userId', async (req, res, next) => {
+//auth
+router.get('/:userId', async (req, res, next) => {
     const id = req.params.userId;
     User.findById(id)
         .exec()
@@ -51,46 +29,8 @@ router.post('/',
 
 })
 
-//mock data
-const mockUser = {
-    firstName: "baruch",
-    lastName: "baruch",
-    email: "baruch@baruch.com",
-    password_hash: "$2b$10$WWtl5qLj6A2bDAe.XpiqCeEbZ03wgr0L6.ayhxE/sDJHrAnrwrLum",
-}
-
-const mockChats = [
-    {
-        id: '10',
-        posts: [
-            {
-                postId: 1,
-                creator: 'baruch',
-                postBody: 'first post',
-                date: Date.now() // created in the data-base
-            },
-        ]
-    },
-    {
-        id: '11',
-        posts: [
-            {
-                postId: 2,
-                creator: 'baruch',
-                postBody: 'first post',
-                date: Date.now()
-            },
-        ]
-    }
-]
-
-const mockPost = {
-    postId: 2,
-    creator: 'jade',
-    postBody: 'first post',
-    date: Date.now()
-}
-
+// const user = await User.findById(id);
+// console.log('1', user);
 
 
 router.post('/chat/:userId',
@@ -98,8 +38,30 @@ router.post('/chat/:userId',
     //validation
     //same user
     async (req, res, next) => {
-        const body = req.body;
-        res.status(200).send(body.posts[0].postBody);
+        const id = req.params.userId;
+        const newChat = req.body;
+        console.log('2', newChat.chat[0].posts[0]);
+        const result = await User.updateOne({ _id: id }, {
+            $set: {
+                chat:
+                    [
+                        {
+                            _id: new mongoose.Types.ObjectId(),
+                            posts: [
+                                {
+                                    _id: new mongoose.Types.ObjectId(),
+                                    name: newChat.chat[0].posts[0].name,
+                                    body: newChat.chat[0].posts[0].body
+                                }
+                            ]
+
+                        }
+                    ]
+
+            }
+        });
+        console.log(result)
+        res.status(200).send(newChat);
     })
 
 router.post('/chat/:userId/:chatId',

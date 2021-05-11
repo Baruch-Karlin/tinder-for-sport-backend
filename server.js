@@ -21,6 +21,7 @@ const host = "127.0.0.1";
 mongoose.connect("mongodb+srv://dbUser:user000@cluster0.1t5ad.mongodb.net/ourDb?retryWrites=true&w=majority",
     { useNewUrlParser: true, useUnifiedTopology: true })
     .then((response) => {
+        console.log('your data base is ' +response.connections[0].name)
         app.listen(port, host, () => {
             console.log(`the server is listening at http://${host}:${port}`);
         });

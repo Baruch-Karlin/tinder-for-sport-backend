@@ -16,7 +16,21 @@ const userSchema = new Schema({
                 distance: Schema.Types.Decimal128,
                 location: String,
             }
-        }]
+        }],
+    chat: [
+        {
+            _id: mongoose.Schema.Types.ObjectId,
+            posts: [
+                {
+                    _id: mongoose.Schema.Types.ObjectId,
+                    name: String,
+                    body: String,
+                    date: { type: Date, default: Date.now }
+                }
+            ]
+
+        }
+    ]
 })
 
 module.exports = mongoose.model('User', userSchema);
