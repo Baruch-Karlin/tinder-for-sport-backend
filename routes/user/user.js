@@ -21,7 +21,12 @@ router.post('/',
         const user = new User({
             _id: new mongoose.Types.ObjectId(),
             first_name: req.body.first_name,
-            last_name: req.body.last_name
+            last_name: req.body.last_name,
+            email: req.body.email,
+            hash_password: req.body.hash_password,
+            telephone: req.body.telephone,
+            picture: req.body.picture,
+            sports: req.body.sports
         });
         user.save()
             .then(result => {
@@ -31,8 +36,10 @@ router.post('/',
             })
             .catch(err => console.log(err))
     })
+    
 
-router.get('/:userId', async (req, res, next) => {
+
+    router.get('/:userId', async (req, res, next) => {
     const id = req.params.userId;
     User.findById(id)
         .exec()
