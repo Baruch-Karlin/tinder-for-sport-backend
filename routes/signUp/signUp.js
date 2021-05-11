@@ -1,5 +1,5 @@
 const express = require('express');
-const validationMiddleware = require('../../middlewares/validation');
+const validationMiddleware = require('../../middlewares/userValidation');
 const { userSignUpValidateSchema } = require('./signUpSchema');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');

@@ -26,6 +26,10 @@
     "fluent-json-schema": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.6",
+<<<<<<< HEAD
+=======
+    "mongoose": "^5.12.8",
+>>>>>>> 25bf70ffa1772046cbf7c320b2bafb9c7f0644f5
     "uuid": "^8.3.2"
   },
   "devDependencies": {
