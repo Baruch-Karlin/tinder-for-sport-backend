@@ -34,36 +34,60 @@ router.get('/:userId', async (req, res, next) => {
 //PUT update user
 //validation
 router.put('/updateProfile/:userId',
-    auth, 
+    auth,
     async (req, res, next) => {
         try {
-            console.log(req.user.uid)
             //check for user if the user exists
-            res.send(req.user.uid)
-                // //  create user
-                // const user = new User({
-                //     _id: new mongoose.Types.ObjectId(),
-                //     first_name: req.body.user.first_name,
-                //     last_name: req.body.user.last_name,
-                //     email: req.body.user.email,
-                //     hash_password: hash,
-                //     telephone: req.body.user.telephone,
-                //     picture: req.body.user.picture,
-                //     sports: req.body.user.sports,
-                //     chat: [],
-                // });
-                // const token = jwt.sign({ uid: user.uid }, 'sfdsf5sfs64s65f4sdfsdf')
-
-                // user.save()
-                //     .then(result => {
-                //         console.log(result)
-                //         res.status(200).send({
-                //             token,
-                //             user: result
-                //         })
-                //     })
-                //     .catch(err => console.log(err))
-            
+            const id = req.user.uid;
+            const updatedUser = await User.findById(id);
+            const { first_name, last_name, email, picture, telephone, password, confirmPassword, sports } = req.body.user;
+            const { running } = sports[0];
+            const { speed, distance, location } = running;
+            if (first_name) {
+                updatedUser.first_name = first_name;
+                await updatedUser.save();
+            }
+            if (last_name) {
+                updatedUser.last_name = last_name;
+                await updatedUser.save();
+            }
+            if (email) {
+                updatedUser.email = email;
+                await updatedUser.save();
+            }
+            if (picture) {
+                updatedUser.picture = picture;
+                await updatedUser.save();
+            }
+            if (telephone) {
+                updatedUser.telephone = telephone;
+                await updatedUser.save();
+            }
+            if (password !== confirmPassword) {
+                res.status(404).send('passwords do not match');
+                return;
+            } else {
+                bcrypt.hash(password, 10, async (err, hash) => {
+                    if (err) next(err);
+                    else {
+                        updatedUser.hash_password = hash;
+                        await updatedUser.save();
+                    }
+                });
+            }
+            if (speed) {
+                updatedUser.sports[0].running.speed = speed;
+                await updatedUser.save();
+            }
+            if (distance) {
+                updatedUser.sports[0].running.distance = distance;
+                await updatedUser.save();
+            }
+            if (location) {
+                updatedUser.sports[0].running.location = location;
+                await updatedUser.save();
+            }
+            res.status(200).send(updatedUser)
         } catch (err) {
             next(err);
         }
@@ -73,6 +97,9 @@ router.put('/updateProfile/:userId',
 
 
 
+
+
+///////////////////    chat api - to be removed from here!!11/////
 // not good- need to be able to add multiple chats
 router.post('/chat/:userId',
     auth,
@@ -109,13 +136,13 @@ router.post('/chat/:userId/:chatId',
         const id = req.params.userId;
         const chatId = req.params.chatId
         const post = req.body
-        const postSender = await User.findById(id);
-        // console.log(postSender);
+        const updatedUser = await User.findById(id);
+        // console.log(updatedUser);
         // console.log(post)
         // need to find index of chat
-        const arr = postSender.chat[0].posts.push(post);
-        await postSender.save()
-        res.status(200).send(postSender.chat[0].posts)
+        const arr = updatedUser.chat[0].posts.push(post);
+        await updatedUser.save()
+        res.status(200).send(updatedUser.chat[0].posts)
 
 
 
