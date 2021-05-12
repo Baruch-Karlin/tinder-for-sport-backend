@@ -33,12 +33,14 @@ const mockUser = {
 
 router.post('/:userId',
     //is same user
-    auth,
+    // auth,
     notifyValidationMiddleware(notifyPostSchema),
     async (req, res, next) => {
-        const notify = req.body.notify
+        console.log(req.body)
+        console.log(req.params)
+        const notify = req.body
         //post into db
-        res.status(200).send(notify);
+        res.status(200).send({notify});
     });
 
 router.put('/:userId',
