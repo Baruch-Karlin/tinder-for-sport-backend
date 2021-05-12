@@ -30,7 +30,7 @@ router.post('/',
                             console.log(checkedUser[0])
                             res.status(403).send('User already exists with this email');
                             return;
-                        } else {                        
+                        } else {
                             //  create user
                             const user = new User({
                                 _id: new mongoose.Types.ObjectId(),
@@ -43,7 +43,7 @@ router.post('/',
                                 chat: [],
                             });
                             const token = jwt.sign({ uid: user._id }, 'sfdsf5sfs64s65f4sdfsdf')
-
+                            console.log(token)
                             user.save()
                                 .then(result => {
                                     console.log(result)
@@ -75,10 +75,10 @@ router.put('/picture_url',
         const id = req.user.uid;
         const updatedUser = await User.findById(id);
         const result = await uploadToCloudinary(req.file.path)
-        if (result){
+        if (result) {
             updatedUser.picture = result.secure_url;
             await updatedUser.save();
-        }     
+        }
         fs.unlinkSync(req.file.path)
         res.status(200).send(updatedUser.picture)
     }
