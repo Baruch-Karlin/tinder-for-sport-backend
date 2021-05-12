@@ -8,7 +8,10 @@ const jwt = require('jsonwebtoken');
 // const { auth } = require('../middlewares/auth'); authentication middle
 // const { checkIfAdmin } = require('../middlewares/checkAdmin'); // admin middle
 const postValidationMiddleware = require('../../middlewares/postValidation');
+const chatValidationMiddleware = require('../../middlewares/cahtValidation');
+
 const { postValidateSchema } = require('./postSchema');
+const { chatValidateSchema } = require('./chatSchema');
 
 const mongoose = require('mongoose');
 const User = require('./mongoose_modle/user');
@@ -29,13 +32,10 @@ router.get('/:userId', async (req, res, next) => {
 
 })
 
-// const user = await User.findById(id);
-// console.log('1', user);
-
 
 router.post('/chat/:userId',
     //auth
-    //validation
+    chatValidationMiddleware(chatValidateSchema),
     //same user
     async (req, res, next) => {
         const id = req.params.userId;

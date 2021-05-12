@@ -34,7 +34,8 @@ router.post('/',
                                 hash_password: hash,
                                 telephone: req.body.user.telephone,
                                 picture: req.body.user.picture,
-                                sports: req.body.user.sports
+                                sports: req.body.user.sports,
+                                chat: [],
                             });
                             const token = jwt.sign({ uid: user.uid }, 'sfdsf5sfs64s65f4sdfsdf')
 
