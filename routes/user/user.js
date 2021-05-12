@@ -9,7 +9,6 @@ const jwt = require('jsonwebtoken');
 // const { checkIfAdmin } = require('../middlewares/checkAdmin'); // admin middle
 const postValidationMiddleware = require('../../middlewares/postValidation');
 const { postValidateSchema } = require('./postSchema');
-
 const mongoose = require('mongoose');
 const User = require('./mongoose_modle/user');
 
@@ -27,7 +26,6 @@ router.post('/',
             .then(result => {
                 console.log(result)
                 res.status(200).send(result)
-
             })
             .catch(err => console.log(err))
     })
