@@ -13,7 +13,7 @@ const userSignUpValidateSchema = S.object()
             .prop('speed', S.string())
             .prop('distance', S.number())
             .prop('location', S.string())
-    )))
+        )))
     .valueOf();
 
 exports.userSignUpValidateSchema = userSignUpValidateSchema;

@@ -1,6 +1,8 @@
 const express = require('express');
 const validationMiddleware = require('../../middlewares/userValidation');
-const { userSignUpValidateSchema } = require('./signUpSchema');
+const {
+    userSignUpValidateSchema
+} = require('./signUpSchema');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -11,15 +13,22 @@ const router = express.Router();
 
 router.post('/',
     validationMiddleware(userSignUpValidateSchema),
-    async (req, res, next) => {
+    async(req, res, next) => {
         try {
-            const { password, confirmPassword } = req.body.user;
+            const {
+                password,
+                confirmPassword
+            } = req.body.user;
             if (password == confirmPassword) {
-                bcrypt.hash(password, 10, async (err, hash) => {
+                bcrypt.hash(password, 10, async(err, hash) => {
                     if (err) next(err);
                     else {
                         //check if the user exists
-                        const checkedUser = await User.find({ email: { $eq: req.body.user.email } })
+                        const checkedUser = await User.find({
+                            email: {
+                                $eq: req.body.user.email
+                            }
+                        })
                         if (checkedUser[0]) {
                             console.log(checkedUser[0])
                             res.status(403).send('User already exists with this email');
@@ -37,7 +46,9 @@ router.post('/',
                                 sports: req.body.user.sports,
                                 chat: [],
                             });
-                            const token = jwt.sign({ uid: user.uid }, 'sfdsf5sfs64s65f4sdfsdf')
+                            const token = jwt.sign({
+                                uid: user.uid
+                            }, 'sfdsf5sfs64s65f4sdfsdf')
 
                             user.save()
                                 .then(result => {
