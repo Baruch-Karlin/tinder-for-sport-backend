@@ -39,7 +39,7 @@ router.put('/updateProfile/:userId',
         try {
             //check for user if the user exists
             const id = req.user.uid;
-            const updatedUser = await User.findById(id);
+            let updatedUser = await User.findById(id);
             const { first_name, last_name, email, picture, telephone, password, confirmPassword, sports } = req.body.user;
             const { running } = sports[0];
             const { speed, distance, location } = running;
