@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 // const { uploadToCloudinary } = require('../lib/cloudinary'); // for img
 // const fs = require('fs'); // for img
 const jwt = require('jsonwebtoken');
-// const { auth } = require('../middlewares/auth'); authentication middle
+const { auth } = require('../../middlewares/auth');
 // const { checkIfAdmin } = require('../middlewares/checkAdmin'); // admin middle
 const postValidationMiddleware = require('../../middlewares/postValidation');
 const chatValidationMiddleware = require('../../middlewares/cahtValidation');
@@ -29,14 +29,14 @@ router.get('/:userId', async (req, res, next) => {
             res.send(doc)
         })
         .catch(err => console.log(err))
-
 })
 
-
+// not good- need to be able to add multiple chats
 router.post('/chat/:userId',
-    //auth
+    auth,
     chatValidationMiddleware(chatValidateSchema),
     //same user
+    //check if exists posts[0] if yes return
     async (req, res, next) => {
         const id = req.params.userId;
         const newChat = req.body;
@@ -44,43 +44,50 @@ router.post('/chat/:userId',
         const result = await User.updateOne({ _id: id }, {
             $set: {
                 chat:
-                    [
-                        {
+                    [{
+                        _id: new mongoose.Types.ObjectId(),
+                        posts: [{
                             _id: new mongoose.Types.ObjectId(),
-                            posts: [
-                                {
-                                    _id: new mongoose.Types.ObjectId(),
-                                    name: newChat.chat[0].posts[0].name,
-                                    body: newChat.chat[0].posts[0].body
-                                }
-                            ]
-
-                        }
-                    ]
-
+                            name: newChat.chat[0].posts[0].name,
+                            body: newChat.chat[0].posts[0].body
+                        }]
+                    }]
             }
         });
-        console.log(result)
-        res.status(200).send(newChat);
+        // should also update reciving user
+        res.status(200).send(newChat.chat[0].posts[0]);
     })
 
 router.post('/chat/:userId/:chatId',
     //auth
-    postValidationMiddleware(postValidateSchema),
+    // postValidationMiddleware(postValidateSchema),
     //same user
     async (req, res, next) => {
         // instead of find query db
+        const id = req.params.userId;
+        const chatId = req.params.chatId
         const post = req.body
+        const postSender = await User.findById(id);
+        // console.log(postSender);
+        // console.log(post)
+        // need to find index of chat
+        const arr = postSender.chat[0].posts.push(post);
+        await postSender.save()
+        res.status(200).send(postSender.chat[0].posts)
 
-        const foundChat = mockChats.find((chat) => {
-            if (chat.id == req.params.chatId)
-                return (chat);
-        })
-        //instead of push add
-        console.log(post)
-        //create an id + date in the db
-        foundChat.posts.push(post)
-        res.status(200).send(foundChat);
+
+       
+
+      
+        // const foundChat = mockChats.find((chat) => {
+        //     if (chat.id == req.params.chatId)
+        //         return (chat);
+        // })
+        // //instead of push add
+        // console.log(post)
+        // //create an id + date in the db
+        // foundChat.posts.push(post)
+        // res.status(200).send(foundChat);
     })
 
 

@@ -14,7 +14,7 @@ app.use('/user', require('./routes/user/user'));
 app.use('/notify', require('./routes/notify/notify'));
 
 
-const port = 6000;
+const port = 8080;
 const host = "127.0.0.1";
 
 
