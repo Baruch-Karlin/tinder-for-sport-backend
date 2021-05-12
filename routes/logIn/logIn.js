@@ -4,44 +4,32 @@ const { userLogInValidateSchema } = require('./logInSchema');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const mongoose = require('mongoose');
+const User = require('../user/mongoose_modle/user')
+
 const router = express.Router();
-
-// mock data
-
-const mockUser = {
-    firstName: "baruch",
-    lastName: "baruch",
-    email: "baruch@baruch.com",
-    password_hash: "$2b$10$WWtl5qLj6A2bDAe.XpiqCeEbZ03wgr0L6.ayhxE/sDJHrAnrwrLum",
-}
-
 
 //post /login
 router.post('/',
     validationMiddleware(userLogInValidateSchema),
     async (req, res, next) => {
+        console.log(req.body.user)
         const { email, password } = req.body.user;
-        
-        //need to add req to db
-        // const user = await getUserByEmail(email);
-
-        const user = mockUser;
-        if (!user) {
+        const user = await User.find({ email: { $eq: req.body.user.email } })
+        console.log(user[0])
+        if (!user[0]) {
             res.status(404).send('User not found with this email');
             return;
         }
-        bcrypt.compare(password, user.password_hash, (err, result) => {
+        bcrypt.compare(password, user[0].hash_password, (err, result) => {
             if (err) throw new Error(err);
             else {
                 if (result) {
-                    const token = jwt.sign({ uid: user.uid }, 'sfdsf5sfs64s65f4sdfsdf')
+                    console.log(result)
+                    const token = jwt.sign({ uid: user._id }, 'sfdsf5sfs64s65f4sdfsdf')
                     res.status(200).send({
                         token,
-                        //
-                        user: {
-                            firstName: user.firstName,
-                            lastName: user.lastName
-                        }
+                        user: user[0]
                     })
                 }
                 else {
