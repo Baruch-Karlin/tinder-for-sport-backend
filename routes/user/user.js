@@ -18,7 +18,7 @@ const User = require('./mongoose_modle/user');
 
 const router = express.Router();
 
-
+//get user by id
 //auth
 router.get('/:userId', async (req, res, next) => {
     const id = req.params.userId;
@@ -30,6 +30,48 @@ router.get('/:userId', async (req, res, next) => {
         })
         .catch(err => console.log(err))
 })
+
+//PUT update user
+//validation
+router.put('/updateProfile/:userId',
+    auth, 
+    async (req, res, next) => {
+        try {
+            console.log(req.user.uid)
+            //check for user if the user exists
+            res.send(req.user.uid)
+                // //  create user
+                // const user = new User({
+                //     _id: new mongoose.Types.ObjectId(),
+                //     first_name: req.body.user.first_name,
+                //     last_name: req.body.user.last_name,
+                //     email: req.body.user.email,
+                //     hash_password: hash,
+                //     telephone: req.body.user.telephone,
+                //     picture: req.body.user.picture,
+                //     sports: req.body.user.sports,
+                //     chat: [],
+                // });
+                // const token = jwt.sign({ uid: user.uid }, 'sfdsf5sfs64s65f4sdfsdf')
+
+                // user.save()
+                //     .then(result => {
+                //         console.log(result)
+                //         res.status(200).send({
+                //             token,
+                //             user: result
+                //         })
+                //     })
+                //     .catch(err => console.log(err))
+            
+        } catch (err) {
+            next(err);
+        }
+    })
+
+
+
+
 
 // not good- need to be able to add multiple chats
 router.post('/chat/:userId',
@@ -76,9 +118,9 @@ router.post('/chat/:userId/:chatId',
         res.status(200).send(postSender.chat[0].posts)
 
 
-       
 
-      
+
+
         // const foundChat = mockChats.find((chat) => {
         //     if (chat.id == req.params.chatId)
         //         return (chat);
