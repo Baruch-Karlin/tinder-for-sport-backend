@@ -10,6 +10,53 @@ const User = require('../user/mongoose_modle/user');
 const router = express.Router();
 
 
+//delete post
+//only user
+router.delete(
+    '/delete/post/:postId/:chatId',
+    auth,
+    async (req, res, next) => {
+        const postId = req.params.postId;
+        const chatId = req.params.chatId;
+        Chat.updateOne({ '_id': chatId },
+            { $pull: { posts: { _id: postId } } })
+            .then((result) => {
+                res.status(200).send('post removed');
+            })
+            .catch(err => console.log(err))
+     })
+
+//this route gets one chat by the chat id
+router.get(
+    '/:chatId',
+    auth,
+    async (req, res, next) => {
+        try {
+            const chatId = req.params.chatId;
+            const chatToFind = await Chat.findById(chatId);
+            if (!chatToFind) return;
+            res.status(200).send(chatToFind)
+        } catch (err) {
+            console.log(err)
+        }
+    })
+
+//this route gets all chats that are related to a user by userId
+router.get(
+    '/all/:userId',
+    auth,
+    async (req, res, next) => {
+        try {
+            const userId = req.params.userId;
+            const chatsToFind = await Chat.find({ $or: [{ send_user_id: { $eq: userId } }, { accept_user_id: { $eq: userId } }] });
+            if (!chatsToFind) return;
+            res.status(200).send(chatsToFind)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+)
+
 router.post(
     '/createChat/:userId',
     auth,
@@ -36,16 +83,17 @@ router.post(
 
 router.post(
     '/createPost/:userId/:chatId',
-    postValidationMiddleware(postValidateSchema),
+    //fix validation
+    // postValidationMiddleware(postValidateSchema),
     auth,
     async (req, res, next) => {
         //finds the chat by id- params
         //finds the creator by token
 
-        const postId = req.params.postId;
+        const chatId = req.params.chatId;
         const creator_id = req.user.uid;
 
-        const chatToAddPost = await Chat.findById(postId);
+        const chatToAddPost = await Chat.findById(chatId);
         const postCreator = await User.findById(creator_id);
         const creatorName = postCreator.first_name;
         const { content } = req.body.post;
