@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const notifySchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  createdDate: Date,
+  createdDate: { type: Date, default: Date.now },
   title: String,
   userId: String,
   running: {
@@ -12,7 +12,6 @@ const notifySchema = new Schema({
     distance: Array,
     location: String,
     date: String,
-    
   },
 });
 

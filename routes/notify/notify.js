@@ -1,18 +1,11 @@
 const express = require("express");
-// const bcrypt = require('bcrypt');
-// const { v4: uuidv4 } = require('uuid');
-// const { upload } = require('../middlewares/imageUpload'); // for img
-// const { uploadToCloudinary } = require('../lib/cloudinary'); // for img
-// const fs = require('fs'); // for img
-// const jwt = require('jsonwebtoken');
 const { auth } = require("../../middlewares/auth");
-// const { checkIfAdmin } = require('../middlewares/checkAdmin'); // admin middle
-const notifyValidationMiddleware = require("../../middlewares/notifyValidation ");
 const { notifyPostSchema } = require("./notifyPostSchema");
 const { notifyPutSchema } = require("./notifyPutSchema");
 const mongoose = require("mongoose");
 const Notify = require("./mongoose_modle/notify");
 const router = express.Router();
+const notifyValidationMiddleware = require("../../middlewares/notifyValidation ");
 
 router.post("/", auth, async (req, res, next) => {
   const notify = new Notify({
@@ -22,7 +15,6 @@ router.post("/", auth, async (req, res, next) => {
     userId: req.user.uid,
     running: req.body.running,
   });
-  console.log(req.body, "req.body");
   notify
     .save()
     .then((result) => {
@@ -43,7 +35,7 @@ router.get("/", auth, async (req, res, next) => {
 
 router.get("/:userId", auth, async (req, res, next) => {
   const userId = req.params.userId;
-  Notify.findOne({ userId: userId })
+  Notify.find({ userId })
     .exec()
     .then((doc) => {
       res.send(doc);
@@ -51,34 +43,31 @@ router.get("/:userId", auth, async (req, res, next) => {
     .catch((err) => console.log(err));
 });
 
-// router.put("/updateNotify:userId", auth, async (req, res, next) => {
-//   const userId = req.params.userId;
-//  const updateNotify = await Notify.findOne({ userId: userId });
-//  const {title, running} = req.body
-//  const {speed, distance, location, date} = running;
-//  if (title) {
-//   updateNotify.title = title;
-//   await updateNotify.save();
-// }
-// res.status(200).send(updateNotify)
-// })
-
-//   //get user and change mock data
-//   if (
-//     speed === mockUser.Sports[0].Running.speed &&
-//     +distance === mockUser.Sports[0].Running.distance &&
-//     location === mockUser.Sports[0].Running.location &&
-//     time === mockUser.Sports[0].Running.time
-//   ) {
-//     res.status(200).send({
-//       notify: {
-//         speed,
-//         distance,
-//         location,
-//         time,
-//       },
-//     });
-//   }
-// });
+router.put("/updateNotify/:userId/:notifyId", auth, async (req, res, next) => {
+  const userId = req.params.userId;
+  const notifyId = req.params.notifyId;
+  const updateNotify = await Notify.find({
+    $and: [{ userId: userId }, { _id: notifyId }],
+  });
+  const { title, running } = req.body;
+  const { speed, distance, location, date } = running;
+  if (title) {
+    updateNotify[0].title = title;
+  }
+  if (speed) {
+    updateNotify[0].running.speed = speed;
+  }
+  if (distance) {
+    updateNotify[0].running.distance = distance;
+  }
+  if (location) {
+    updateNotify[0].running.location = location;
+  }
+  if (date) {
+    updateNotify[0].running.date = date;
+  }
+  await updateNotify[0].save();
+  res.status(200).send(updateNotify);
+});
 
 module.exports = router;
