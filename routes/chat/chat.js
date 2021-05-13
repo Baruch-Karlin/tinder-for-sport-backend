@@ -11,6 +11,20 @@ const router = express.Router();
 
 
 //delete post
+//only user
+router.delete(
+    '/delete/post/:postId/:chatId',
+    auth,
+    async (req, res, next) => {
+        const postId = req.params.postId;
+        const chatId = req.params.chatId;
+        Chat.updateOne({ '_id': chatId },
+            { $pull: { posts: { _id: postId } } })
+            .then((result) => {
+                res.status(200).send('post removed');
+            })
+            .catch(err => console.log(err))
+     })
 
 //this route gets one chat by the chat id
 router.get(
@@ -25,12 +39,12 @@ router.get(
         } catch (err) {
             console.log(err)
         }
-    }
-)
+    })
 
 //this route gets all chats that are related to a user by userId
 router.get(
     '/all/:userId',
+    auth,
     async (req, res, next) => {
         try {
             const userId = req.params.userId;
@@ -69,7 +83,8 @@ router.post(
 
 router.post(
     '/createPost/:userId/:chatId',
-    postValidationMiddleware(postValidateSchema),
+    //fix validation
+    // postValidationMiddleware(postValidateSchema),
     auth,
     async (req, res, next) => {
         //finds the chat by id- params
