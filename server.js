@@ -11,6 +11,8 @@ app.use("/signUp", require("./routes/signUp/signUp"));
 app.use("/logIn", require("./routes/logIn/logIn"));
 app.use("/user", require("./routes/user/user"));
 app.use("/notify", require("./routes/notify/notify"));
+app.use("/chat", require("./routes/chat/chat"));
+
 
 const port = 8080;
 const host = "127.0.0.1";
