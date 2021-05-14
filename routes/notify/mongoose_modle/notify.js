@@ -4,13 +4,15 @@ const { Schema } = mongoose;
 
 const notifySchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  time: Date,
+  createdDate: Date,
   title: String,
+  userId: String,
   running: {
     speed: String,
     distance: Array,
     location: String,
-    Date: String,
+    date: String,
+    
   },
 });
 
