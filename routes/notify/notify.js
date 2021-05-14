@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const Notify = require("./mongoose_modle/notify");
 const router = express.Router();
 const notifyValidationMiddleware = require("../../middlewares/notifyValidation ");
+const User = mongoose.model("User");
 
 router.post("/", auth, async (req, res, next) => {
   const notify = new Notify({
@@ -34,13 +35,14 @@ router.get("/", auth, async (req, res, next) => {
 });
 
 router.get("/:userId", auth, async (req, res, next) => {
-  const userId = req.params.userId;
-  Notify.find({ userId })
-    .exec()
-    .then((doc) => {
-      res.send(doc);
-    })
-    .catch((err) => console.log(err));
+  try {
+    const userId = req.params.userId;
+    const getUserNotify = await Notify.find({ userId });
+    if (!getUserNotify) return;
+    res.status(200).send(getUserNotify);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 router.put("/updateNotify/:userId/:notifyId", auth, async (req, res, next) => {
@@ -68,6 +70,20 @@ router.put("/updateNotify/:userId/:notifyId", auth, async (req, res, next) => {
   }
   await updateNotify[0].save();
   res.status(200).send(updateNotify);
+});
+
+router.get("/all/:userId", auth, async (req, res, next) => {
+  const userId = req.params.userId;
+  const { running } = req.body;
+  const findNotify = await Notify.find({
+    $or: [
+      { "running.speed": { $eq: running.speed } },
+      { "running.distance": { $eq: running.distance } },
+    ],
+  });
+  if (!findNotify) return;
+  await findNotify[0].save();
+  res.status(200).send(findNotify);
 });
 
 module.exports = router;
