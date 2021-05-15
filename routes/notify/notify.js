@@ -24,7 +24,7 @@ router.post("/", auth, async (req, res, next) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/", auth, async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   Notify.find({}, function (err, result) {
     if (err) {
       console.log(err);
