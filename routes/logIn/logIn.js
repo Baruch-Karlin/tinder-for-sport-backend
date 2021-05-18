@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const User = require('../user/mongoose_modle/user')
 const router = express.Router();
 
-//post /login
+
 router.post('/',
     validationMiddleware(userLogInValidateSchema),
     async (req, res, next) => {
