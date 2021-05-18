@@ -1,11 +1,15 @@
-const S = require('fluent-json-schema').default;
-
+const S = require("fluent-json-schema").default;
 
 const notifyPutSchema = S.object()
-    .prop('speed', S.string())
-    .prop('distance', S.number())
-    .prop('location', S.string())
-    .prop('time', S.string())
-    .valueOf();
+  .prop("title", S.string().required())
+  .prop(
+    "running",
+    S.object()
+      .prop("speed", S.string().required())
+      .prop("distance", S.string().required())
+      .prop("location", S.string().required())
+      .prop("date", S.string().required())
+  )
+  .valueOf();
 
 exports.notifyPutSchema = notifyPutSchema;

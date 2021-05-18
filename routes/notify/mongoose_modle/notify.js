@@ -1,4 +1,3 @@
-const { Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
@@ -9,11 +8,10 @@ const notifySchema = new Schema({
   userId: String,
   running: {
     speed: String,
-    distance: Array,
+    distance: String,
     location: String,
     date: String,
   },
 });
-
 
 module.exports = mongoose.model("Notify", notifySchema);
