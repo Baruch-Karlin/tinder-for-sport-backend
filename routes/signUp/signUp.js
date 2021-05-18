@@ -39,7 +39,7 @@ router.post('/',
                                 sports: req.body.user.sports,
                                 chat: [],
                             });
-                            const token = jwt.sign({ uid: user._id }, 'sfdsf5sfs64s65f4sdfsdf')
+                            const token = jwt.sign({ uid: user._id }, process.env.JWT_SECRET)
                             user.save()
                                 .then(result => {
                                     res.status(200).send({

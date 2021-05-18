@@ -21,7 +21,7 @@ router.post('/',
             if (err) throw new Error(err);
             else {
                 if (result) {
-                    const token = jwt.sign({ uid: user[0]._id }, 'sfdsf5sfs64s65f4sdfsdf')
+                    const token = jwt.sign({ uid: user[0]._id }, process.env.JWT_SECRET)
                     res.status(200).send({
                         token,
                         user: user[0]
