@@ -58,14 +58,14 @@ router.get(
 )
 
 router.post(
-    '/createChat/:userId',
-    auth,
+    '/createChat/:userId/:accepterId',
+    // auth,
     async (req, res, next) => {
         //when pressing on notify- sends request to here with the user who clicked i.e :userId
         // also receives in body the id of the user who created the notify
 
-        const senderId = req.body.id;
-        const accepterId = req.user.uid;
+        const senderId = req.params.userId;
+        const accepterId = req.params.accepterId;
         console.log(senderId);
         console.log(accepterId);
 
@@ -89,6 +89,7 @@ router.post(
     async (req, res, next) => {
         //finds the chat by id- params
         //finds the creator by token
+        console.log(req.body)
 
         const chatId = req.params.chatId;
         const creator_id = req.user.uid;
@@ -96,7 +97,7 @@ router.post(
         const chatToAddPost = await Chat.findById(chatId);
         const postCreator = await User.findById(creator_id);
         const creatorName = postCreator.first_name;
-        const { content } = req.body.post;
+        const { content } = req.body;
 
         const post = {
             _id: new mongoose.Types.ObjectId(),
