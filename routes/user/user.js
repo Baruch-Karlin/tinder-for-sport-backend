@@ -3,11 +3,18 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { auth } = require('../../middlewares/auth');
 const userValidation = require('../../middlewares/userValidation')
-const { userSignUpValidateSchema} = require('../signUp/signUpSchema');
+const { userSignUpValidateSchema } = require('../signUp/signUpSchema');
+
 const mongoose = require('mongoose');
 const User = require('./mongoose_modle/user');
 
 const router = express.Router();
+
+
+router.get('/', (req, res) => {
+    req.log.debug
+    res.send(`Hello user from ${process.env.NODE_ENV}`);
+});
 
 //get user by id
 //auth
