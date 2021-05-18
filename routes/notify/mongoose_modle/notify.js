@@ -6,6 +6,7 @@ const notifySchema = new Schema({
   createdDate: { type: Date, default: Date.now },
   title: String,
   userId: String,
+  response: [String],
   running: {
     speed: String,
     distance: String,
