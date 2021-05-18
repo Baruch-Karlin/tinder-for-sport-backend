@@ -17,6 +17,7 @@ router.post(
       createdDate: req.body.createdDate,
       title: req.body.title,
       userId: req.user.uid,
+      response: req.user.uid,
       running: req.body.running,
     });
     notify
@@ -79,27 +80,46 @@ router.put(
 
 router.get("/all/:userId", auth, async (req, res) => {
   const { running } = req.body;
-  const date = running.date;
-  const splitdate = date.split(",");
-  const dayAndMonth = splitdate[1];
-  const time = splitdate[2];
-  const splitTime = time.split(":");
-  const hour = splitTime[0];
+  const runningDate = running.date;
+  // const splitdate = runningDate.split("T");
+
+  // const fullDate = splitdate[0];
+  // console.log(fullDate);
+  // const splitFullDate = fullDate.split("-");
+  // console.log(splitFullDate);
+
+  // const time = splitdate[1];
+  // const splitTime = time.split(":");
+  // const hour = splitTime[0];
   const findNotify = await Notify.find({
     $or: [
       { "running.speed": { $eq: running.speed } },
       { "running.distance": { $eq: running.distance } },
-      { "running.date": { $regex: hour } },
+      // { "running.date": { $regex: hour } },
     ],
-  }).sort({
-    "running.date": 1,
   });
+  // .sort({
+  //   "running.date": 1,
+  // });
   if (!findNotify[0]) {
     res.send("no matches found");
     return;
   }
   await findNotify[0].save();
   res.status(200).send(findNotify);
+});
+
+router.put("/response/:userId/:notifyId", auth, async (req, res) => {
+  const userId = req.params.userId;
+  const updateResponse = await Notify.findOneAndUpdate(
+    {
+      _id: req.params.notifyId,
+    },
+    { $push: { response: userId } }
+  );
+  console.log(updateResponse);
+  await updateResponse.save();
+  res.status(200).send(updateResponse);
 });
 
 module.exports = router;
