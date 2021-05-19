@@ -17,7 +17,6 @@ router.post(
       createdDate: req.body.createdDate,
       title: req.body.title,
       userId: req.user.uid,
-      response: req.user.uid,
       running: req.body.running,
     });
     notify
@@ -80,27 +79,12 @@ router.put(
 
 router.get("/all/:userId", auth, async (req, res) => {
   const { running } = req.body;
-  const runningDate = running.date;
-  // const splitdate = runningDate.split("T");
-
-  // const fullDate = splitdate[0];
-  // console.log(fullDate);
-  // const splitFullDate = fullDate.split("-");
-  // console.log(splitFullDate);
-
-  // const time = splitdate[1];
-  // const splitTime = time.split(":");
-  // const hour = splitTime[0];
   const findNotify = await Notify.find({
     $or: [
       { "running.speed": { $eq: running.speed } },
       { "running.distance": { $eq: running.distance } },
-      // { "running.date": { $regex: hour } },
     ],
   });
-  // .sort({
-  //   "running.date": 1,
-  // });
   if (!findNotify[0]) {
     res.send("no matches found");
     return;
@@ -117,7 +101,6 @@ router.put("/response/:userId/:notifyId", auth, async (req, res) => {
     },
     { $push: { response: userId } }
   );
-  console.log(updateResponse);
   await updateResponse.save();
   res.status(200).send(updateResponse);
 });
