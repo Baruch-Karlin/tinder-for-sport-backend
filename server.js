@@ -33,14 +33,25 @@ app.get('/', (req, res) => {
 const port = +process.env.PORT;
 const host = process.env.HOST;
 
+module.exports = app;
 
 mongoose.connect(process.env.DB_URL,
     { useNewUrlParser: true, useUnifiedTopology: true })
     .then((response) => {
         console.log('your data base is ' + response.connections[0].name)
+<<<<<<< HEAD
         app.listen(port, host, () => {
             console.log(`the server is listening at http://${host}:${port}`);
         });
     }).catch((err) => {
         console.log(err)
     })
+=======
+        if (process.env.NODE_ENV !== "test") {
+            app.listen(port, host, () => {
+                console.log(`the server is listening at http://${host}:${port}`);
+            });
+        }
+    }).catch((err) => { console.log(err) })
+
+>>>>>>> 0cf8ba471f9ef283191c024bced8fd6114507bff
