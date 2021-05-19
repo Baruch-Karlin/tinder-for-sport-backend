@@ -1,5 +1,4 @@
 const path = require('path');
-console.log(process.env.NODE_ENV);
 const result = require('dotenv').config({
     path: path.join(__dirname, `./.env.${process.env.NODE_ENV}`),// maybe change here
 });
@@ -16,7 +15,7 @@ const mongoose = require("mongoose");
 const app = express();
 
 app.use(express.json());
-app.use(pino({ level: process.env.LOG_LEVEL }));
+// app.use(pino({ level: process.env.LOG_LEVEL }));
 app.use(cors());
 app.use("/signUp", require("./routes/signUp/signUp"));
 app.use("/logIn", require("./routes/logIn/logIn"));
@@ -26,7 +25,6 @@ app.use("/chat", require("./routes/chat/chat"));
 
 
 app.get('/', (req, res) => {
-    req.log.debug
     res.send(`Hello world from ${process.env.NODE_ENV}`);
 });
 
@@ -44,5 +42,6 @@ mongoose.connect(process.env.DB_URL,
                 console.log(`the server is listening at http://${host}:${port}`);
             });
         }
-    }).catch((err) => { console.log(err) })
+    })
+    // .catch((err) => { console.log(err) })
 

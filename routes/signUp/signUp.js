@@ -46,7 +46,8 @@ router.post('/',
                                         token,
                                         user: result
                                     })
-                                }).catch(err => console.log(err))
+                                })
+                                // .catch(err => console.log(err))
                         }
                     }
                 })

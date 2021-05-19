@@ -28,7 +28,7 @@ router.post('/',
                     })
                 }
                 else {
-                    return res.status(404).send({ success: false, message: 'Inserted password does not match this E-mail account' });
+                    return res.status(404).send('Inserted password does not match this E-mail account');
                 }
             }
         })

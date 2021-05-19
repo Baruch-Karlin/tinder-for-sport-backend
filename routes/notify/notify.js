@@ -24,7 +24,7 @@ router.post(
       .then((result) => {
         res.status(200).send(result);
       })
-      .catch((err) => console.log(err));
+      // .catch((err) => console.log(err));
   }
 );
 
@@ -41,7 +41,7 @@ router.get("/:userId", auth, async (req, res) => {
     if (!getUserNotify) return;
     res.status(200).send(getUserNotify);
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 });
 

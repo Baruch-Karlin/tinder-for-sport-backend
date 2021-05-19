@@ -12,7 +12,6 @@ const router = express.Router();
 
 
 router.get('/', (req, res) => {
-    req.log.debug
     res.send(`Hello user from ${process.env.NODE_ENV}`);
 });
 
