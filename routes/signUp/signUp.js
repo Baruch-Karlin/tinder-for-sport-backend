@@ -9,20 +9,8 @@ const {
     upload
 } = require('../../middlewares/imageUpload');
 const fs = require('fs');
-<<<<<<< HEAD
-const {
-    uploadToCloudinary
-} = require('../../lib/cloudinary');
-const {
-    auth
-} = require('../../middlewares/auth');
-
-
-
-=======
 const { uploadToCloudinary } = require('../../lib/cloudinary');
 const { auth } = require('../../middlewares/auth');
->>>>>>> 0ecf3b849e2b6a3847294b0ea2596615c8aaca26
 const mongoose = require('mongoose');
 const User = require('../user/mongoose_modle/user')
 
@@ -62,14 +50,7 @@ router.post('/',
                                 sports: req.body.user.sports,
                                 chat: [],
                             });
-<<<<<<< HEAD
-                            const token = jwt.sign({
-                                uid: user._id
-                            }, 'sfdsf5sfs64s65f4sdfsdf')
-
-=======
                             const token = jwt.sign({ uid: user._id }, process.env.JWT_SECRET)
->>>>>>> 0ecf3b849e2b6a3847294b0ea2596615c8aaca26
                             user.save()
                                 .then(result => {
                                     res.status(200).send({
