@@ -1,18 +1,16 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
 
 const app = express();
 
 app.use(express.json());
 
 app.use(cors());
-app.use('/signUp', require('./routes/signUp/signUp'));
-app.use('/logIn', require('./routes/logIn/logIn'));
-app.use('/user', require('./routes/user/user'));
-app.use('/notify', require('./routes/notify/notify'));
-
+app.use("/signUp", require("./routes/signUp/signUp"));
+app.use("/logIn", require("./routes/logIn/logIn"));
+app.use("/user", require("./routes/user/user"));
+app.use("/notify", require("./routes/notify/notify"));
 
 const port = 8080;
 const host = "127.0.0.1";
