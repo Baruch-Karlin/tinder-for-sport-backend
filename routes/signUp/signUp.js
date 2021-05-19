@@ -9,6 +9,7 @@ const {
     upload
 } = require('../../middlewares/imageUpload');
 const fs = require('fs');
+<<<<<<< HEAD
 const {
     uploadToCloudinary
 } = require('../../lib/cloudinary');
@@ -18,6 +19,10 @@ const {
 
 
 
+=======
+const { uploadToCloudinary } = require('../../lib/cloudinary');
+const { auth } = require('../../middlewares/auth');
+>>>>>>> 0ecf3b849e2b6a3847294b0ea2596615c8aaca26
 const mongoose = require('mongoose');
 const User = require('../user/mongoose_modle/user')
 
@@ -57,19 +62,21 @@ router.post('/',
                                 sports: req.body.user.sports,
                                 chat: [],
                             });
+<<<<<<< HEAD
                             const token = jwt.sign({
                                 uid: user._id
                             }, 'sfdsf5sfs64s65f4sdfsdf')
 
+=======
+                            const token = jwt.sign({ uid: user._id }, process.env.JWT_SECRET)
+>>>>>>> 0ecf3b849e2b6a3847294b0ea2596615c8aaca26
                             user.save()
                                 .then(result => {
-                                    console.log(result)
                                     res.status(200).send({
                                         token,
                                         user: result
                                     })
-                                })
-                                .catch(err => console.log(err))
+                                }).catch(err => console.log(err))
                         }
                     }
                 })
@@ -83,21 +90,23 @@ router.post('/',
     })
 
 
-module.exports = router;
-
 router.put('/picture_url',
     upload.single('profile_picture'),
     auth,
-    async(req, res, next) => {
-        const id = req.user.uid;
-        const updatedUser = await User.findById(id);
-        const result = await uploadToCloudinary(req.file.path)
-        if (result) {
-            updatedUser.picture = result.secure_url;
-            await updatedUser.save();
+    async (req, res, next) => {
+        try{
+            const id = req.user.uid;
+            const updatedUser = await User.findById(id);
+            const result = await uploadToCloudinary(req.file.path)
+            if (result) {
+                updatedUser.picture = result.secure_url;
+                await updatedUser.save();
+            }
+            fs.unlinkSync(req.file.path)
+            res.status(200).send(updatedUser.picture);
+        } catch (err) {
+            console.log(err);
         }
-        fs.unlinkSync(req.file.path)
-        res.status(200).send(updatedUser.picture)
     }
 );
 
