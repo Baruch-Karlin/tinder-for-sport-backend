@@ -1,9 +1,13 @@
 const express = require('express');
 const validationMiddleware = require('../../middlewares/userValidation');
-const { userSignUpValidateSchema } = require('./signUpSchema');
+const {
+    userSignUpValidateSchema
+} = require('./signUpSchema');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { upload } = require('../../middlewares/imageUpload');
+const {
+    upload
+} = require('../../middlewares/imageUpload');
 const fs = require('fs');
 const { uploadToCloudinary } = require('../../lib/cloudinary');
 const { auth } = require('../../middlewares/auth');
@@ -14,15 +18,22 @@ const router = express.Router();
 
 router.post('/',
     validationMiddleware(userSignUpValidateSchema),
-    async (req, res, next) => {
+    async(req, res, next) => {
         try {
-            const { password, confirmPassword } = req.body.user;
+            const {
+                password,
+                confirmPassword
+            } = req.body.user;
             if (password == confirmPassword) {
-                bcrypt.hash(password, 10, async (err, hash) => {
+                bcrypt.hash(password, 10, async(err, hash) => {
                     if (err) next(err);
                     else {
                         //check if the user exists
-                        const checkedUser = await User.find({ email: { $eq: req.body.user.email } })
+                        const checkedUser = await User.find({
+                            email: {
+                                $eq: req.body.user.email
+                            }
+                        })
                         if (checkedUser[0]) {
                             console.log(checkedUser[0])
                             res.status(403).send('User already exists with this email');
@@ -46,7 +57,8 @@ router.post('/',
                                         token,
                                         user: result
                                     })
-                                }).catch(err => console.log(err))
+                                })
+                                // .catch(err => console.log(err))
                         }
                     }
                 })
