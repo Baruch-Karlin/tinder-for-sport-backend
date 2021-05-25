@@ -4,10 +4,12 @@
   "description": "Not only abs also the back matters",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "jest-test": "jest --watchAll",
+    "test": "cross-env NODE_ENV=test jest",
     "dev": "cross-env NODE_ENV=local nodemon server.js",
     "start": "cross-env NODE_ENV=production node server.js"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "repository": {
     "type": "git",
@@ -27,6 +29,7 @@
     "cors": "^2.8.5",
     "dotenv": "^9.0.2",
     "express": "^4.17.1",
+    "faker": "^5.5.3",
     "fluent-json-schema": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.6",

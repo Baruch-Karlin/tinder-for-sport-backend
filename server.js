@@ -1,12 +1,4 @@
-const path = require('path');
-const result = require('dotenv').config({
-    path: path.join(__dirname, `./.env.${process.env.NODE_ENV}`),// maybe change here
-});
-if (result.error) {
-    throw new Error(result.error);
-}
-
-
+require('../tinder-for-sport-backend/lib/config')
 const express = require("express");
 const pino = require('pino-http');
 const cors = require("cors");
@@ -33,15 +25,17 @@ const host = process.env.HOST;
 
 module.exports = app;
 
-mongoose.connect(process.env.DB_URL,
-    { useNewUrlParser: true, useUnifiedTopology: true })
-    .then((response) => {
-        console.log('your data base is ' + response.connections[0].name)
-        if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV !== "test") {
+    mongoose.connect(process.env.DB_URL,
+        { useNewUrlParser: true, useUnifiedTopology: true })
+        .then((response) => {
+            console.log('your data base is ' + response.connections[0].name)
+
             app.listen(port, host, () => {
                 console.log(`the server is listening at http://${host}:${port}`);
             });
-        }
-    })
+
+        })
+}
     // .catch((err) => { console.log(err) })
 

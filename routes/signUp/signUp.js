@@ -48,7 +48,6 @@ router.post('/',
                                 hash_password: hash,
                                 telephone: req.body.user.telephone,
                                 sports: req.body.user.sports,
-                                chat: [],
                             });
                             const token = jwt.sign({ uid: user._id }, process.env.JWT_SECRET)
                             user.save()
